@@ -17,6 +17,8 @@ import { FieldLayout } from '../../interfaces/field-layout.enum';
 import { FEED_DETAILS_CONFIG, groupFieldsByCategory } from '../../constants/feed-details.config';
 import { FormSection, FeedDataCategory, FormField } from '../../interfaces/form-field.interface';
 import {  } from '../../constants/feed-details.config';
+import { FormStateService } from '../../services/form-state.service';
+import { FeedDataCategoryMapping, FormCategory } from '../../interfaces/feed-form.interface';
 
 
 @Component({
@@ -81,7 +83,7 @@ export class FormBuilderComponent implements OnInit {
     'Emergency Change'
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private formStateService: FormStateService) {
     this.feedDetailsConfig = groupFieldsByCategory(FEED_DETAILS_CONFIG);
   }
 
@@ -278,7 +280,14 @@ export class FormBuilderComponent implements OnInit {
     if (this.basicDetailsForm.valid && 
         this.feedDetailsForm.valid && 
         this.feedAttributesForm.valid) {
-      this.formSubmit.emit(this.getFormValues());
+      
+      const finalData = this.formStateService.getFinalFormData();
+      
+      if (this.formStateService.debugMode()) {
+        console.log('Form Submission with Audit:', finalData);
+      }
+      
+      this.formSubmit.emit(finalData);
     }
   }
 
@@ -286,5 +295,12 @@ export class FormBuilderComponent implements OnInit {
   canProceed(step: number): boolean {
     // Allow navigation between steps without validation
     return true;
+  }
+
+  private mapToFormCategory(category: string): FormCategory {
+    if (category in FeedDataCategory) {
+      return FeedDataCategoryMapping[category as FeedDataCategory];
+    }
+    return category as FormCategory;
   }
 } 

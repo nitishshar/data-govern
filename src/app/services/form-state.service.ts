@@ -4,10 +4,10 @@ import { StorageUtil } from '../utils/storage.util';
 import { 
   FeedFormData, 
   AuditLog, 
-  FeedDetails,
   FeedAttribute,
   ChangeDetails,
-  Commentary 
+  Commentary, 
+  FormCategory
 } from '../interfaces/feed-form.interface';
 
 const STORAGE_KEYS = {
@@ -24,6 +24,7 @@ export class FormStateService {
   private initialState = signal<FeedFormData | null>(null);
   private currentState = signal<FeedFormData | null>(null);
   auditLogs = signal<AuditLog[]>([]);
+  readonly debugMode = signal<boolean>(true);
 
   constructor() {
     this.loadFromStorage();
@@ -97,44 +98,58 @@ export class FormStateService {
     return this.mockApiCall('submitForm', current);
   }
 
-  updateField(category: keyof FeedDetails, fieldName: string, value: any): void {
+  updateField(category: FormCategory, fieldName: string, value: any) {
     const current = this.currentState();
     if (!current) return;
 
-    const newState: FeedFormData = {
-      ...current,
-      feedDetails: {
-        ...current.feedDetails,
-        [category]: {
-          ...(current.feedDetails[category] as Record<string, any>),
-          [fieldName]: value
-        }
-      }
-    };
-
-    this.currentState.set(newState);
-    this.generateAuditLog(category, fieldName, value);
-    StorageUtil.set(STORAGE_KEYS.FORM_DATA, newState);
-  }
-
-  private generateAuditLog(category: keyof FeedDetails, fieldName: string, newValue: any): void {
-    const initial = this.initialState();
-    if (!initial) return;
-
-    const categoryData = initial.feedDetails[category] as Record<string, any>;
-    const previousValue = categoryData ? categoryData[fieldName] : undefined;
-
-    if (previousValue !== newValue) {
+    const previousValue = this.getFieldValue(category, fieldName);
+    
+    if (previousValue !== value) {
       const auditEntry: AuditLog = {
         field_name: `${category}.${fieldName}`,
-        previous_value: previousValue,
-        new_value: newValue,
+        previous_value: previousValue ?? '',
+        new_value: value,
         timestamp: new Date(),
         user_id: 'current-user'
       };
 
       this.auditLogs.update(logs => [...logs, auditEntry]);
-      StorageUtil.set(STORAGE_KEYS.AUDIT_LOG, this.auditLogs());
+      console.log('Field Change Audit:', auditEntry);
+    }
+
+    const newState = structuredClone(current);
+    
+    if (category === 'basicDetails') {
+      newState.title = fieldName === 'title' ? value : newState.title;
+      newState.description = fieldName === 'description' ? value : newState.description;
+    } else if (category === 'changeDetails') {
+      newState.feedDetails.changeDataDetail = {
+        ...newState.feedDetails.changeDataDetail,
+        [fieldName]: value
+      };
+    } else {
+      newState.feedDetails = {
+        ...newState.feedDetails,
+        [category]: {
+          ...newState.feedDetails[category],
+          [fieldName]: value
+        }
+      };
+    }
+    
+    this.currentState.set(newState);
+  }
+
+  private getFieldValue(category: FormCategory, fieldName: string): any {
+    const state = this.currentState();
+    if (!state) return undefined;
+
+    if (category === 'basicDetails') {
+      return fieldName === 'title' ? state.title : state.description;
+    } else if (category === 'changeDetails') {
+      return state.feedDetails.changeDataDetail[fieldName];
+    } else {
+      return state.feedDetails[category]?.[fieldName];
     }
   }
 
@@ -152,5 +167,18 @@ export class FormStateService {
     StorageUtil.remove(STORAGE_KEYS.AUDIT_LOG);
     this.initializeEmptyForm();
     this.auditLogs.set([]);
+  }
+
+  getFinalFormData(): FeedFormData {
+    const current = this.currentState();
+    if (!current) throw new Error('No form data available');
+
+    return {
+      ...current,
+      feedDetails: {
+        ...current.feedDetails,
+        audit: this.auditLogs()
+      }
+    };
   }
 } 

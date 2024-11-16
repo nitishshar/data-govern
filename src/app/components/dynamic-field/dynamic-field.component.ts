@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,8 +6,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FormField } from '../../interfaces/form-field.interface';
+import { FeedDataCategory, FormField } from '../../interfaces/form-field.interface';
 import { FieldLayout } from '../../interfaces/field-layout.enum';
+import { FormStateService } from '../../services/form-state.service';
+import { FeedDataCategoryMapping, FeedDetails } from '../../interfaces/feed-form.interface';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-dynamic-field',
@@ -134,11 +137,20 @@ import { FieldLayout } from '../../interfaces/field-layout.enum';
     }
   `]
 })
-export class DynamicFieldComponent {
+export class DynamicFieldComponent implements OnInit {
   @Input() field!: FormField;
   @Input() form!: FormGroup;
   @Input() layout: FieldLayout = FieldLayout.VERTICAL;
   @Input() showValidation = false;
+
+  constructor(private formStateService: FormStateService) {}
+
+  ngOnInit() {
+    this.control?.valueChanges.pipe(debounceTime(300)).subscribe(value => {
+      const category = FeedDataCategoryMapping[this.field.feedDataCategory];
+      this.formStateService.updateField(category, this.field.name, value);
+    });
+  }
 
   get showError(): boolean {
     const control = this.control;
