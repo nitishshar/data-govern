@@ -46,6 +46,14 @@
     </ng-container>
 
     <mat-hint *ngIf="field.information">{{field.information}}</mat-hint>
-    <mat-error *ngIf="!isValid">This field is required</mat-error>
+    <mat-error *ngIf="control?.errors?.['required']">
+      Required
+    </mat-error>
+    <mat-error *ngIf="control?.errors?.['min']">
+      Value must be greater than {{field.validations?.min}}
+    </mat-error>
+    <mat-error *ngIf="control?.errors?.['pattern']">
+      {{field.validations?.message || 'Invalid format'}}
+    </mat-error>
   </mat-form-field>
 </div> 

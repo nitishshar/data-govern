@@ -273,9 +273,18 @@ export class FormBuilderComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.basicDetailsForm.valid && this.feedDetailsForm.valid) {
-      const formData = this.getFormValues();
-      this.formSubmit.emit(formData);
+    this.showValidation.set(true);
+    
+    if (this.basicDetailsForm.valid && 
+        this.feedDetailsForm.valid && 
+        this.feedAttributesForm.valid) {
+      this.formSubmit.emit(this.getFormValues());
     }
+  }
+
+  // Modify stepper navigation to not check validation
+  canProceed(step: number): boolean {
+    // Allow navigation between steps without validation
+    return true;
   }
 } 
