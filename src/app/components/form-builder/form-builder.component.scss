@@ -13,4 +13,84 @@ mat-stepper {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.layout-toolbar {
+  margin-bottom: 1rem;
+  background: transparent;
+
+  mat-button-toggle-group {
+    margin-left: 1rem;
+  }
+
+  mat-button-toggle {
+    .mat-icon {
+      margin-right: 4px;
+    }
+  }
+}
+
+.fields-container {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+
+  // Vertical Layout
+  .layout-vertical & {
+    grid-template-columns: 1fr;
+  }
+
+  // Horizontal Layout
+  .layout-horizontal & {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  // Card Layout
+  .layout-card & {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+    app-dynamic-field {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+  }
+}
+
+mat-expansion-panel {
+  margin-bottom: 1rem;
+
+  &.mat-expanded {
+    margin-bottom: 1rem;
+  }
+}
+
+.button-row {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.change-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+
+  .form-field {
+    width: 100%;
+    
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+.form-fields-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
 } 
