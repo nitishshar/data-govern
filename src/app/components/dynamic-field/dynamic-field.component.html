@@ -1,0 +1,51 @@
+<div class="field-container" [class]="layout">
+  <mat-form-field [appearance]="'outline'">
+    <mat-label>{{field.label}}</mat-label>
+    
+    <ng-container [ngSwitch]="field.type">
+      <!-- Text Input -->
+      <input *ngSwitchCase="FormFieldType.TEXT"
+             matInput
+             [formControlName]="field.name"
+             [placeholder]="field.placeholder || ''"
+             [required]="field.required">
+
+      <!-- Number Input -->
+      <input *ngSwitchCase="FormFieldType.NUMBER"
+             matInput
+             type="number"
+             [formControlName]="field.name"
+             [placeholder]="field.placeholder || ''"
+             [required]="field.required">
+
+      <!-- Select Input -->
+      <mat-select *ngSwitchCase="FormFieldType.SELECT"
+                  [formControlName]="field.name"
+                  [required]="field.required">
+        <mat-option *ngFor="let option of field.options" [value]="option.value">
+          {{option.label}}
+        </mat-option>
+      </mat-select>
+
+      <!-- Date Input -->
+      <input *ngSwitchCase="FormFieldType.DATE"
+             matInput
+             [matDatepicker]="picker"
+             [formControlName]="field.name"
+             [required]="field.required">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+
+      <!-- Textarea Input -->
+      <textarea *ngSwitchCase="FormFieldType.TEXTAREA"
+                matInput
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder || ''"
+                [required]="field.required">
+      </textarea>
+    </ng-container>
+
+    <mat-hint *ngIf="field.information">{{field.information}}</mat-hint>
+    <mat-error *ngIf="!isValid">This field is required</mat-error>
+  </mat-form-field>
+</div> 

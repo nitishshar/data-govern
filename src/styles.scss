@@ -1,1 +1,198 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+// Define font variables
+$app-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+// Form field styles
+.mat-mdc-form-field {
+  width: 100%;
+  font-family: $app-font;
+  font-size: 14px;
+
+  // Outline styles
+  --mdc-outlined-text-field-outline-color: rgba(0, 0, 0, 0.12);
+  --mdc-outlined-text-field-focus-outline-color: #009bda;
+  --mdc-outlined-text-field-hover-outline-color: rgba(0, 0, 0, 0.87);
+  
+  // Input text styling
+  .mat-mdc-input-element {
+    font-family: $app-font;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  // Compact input padding
+  .mat-mdc-form-field-infix {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    min-height: 36px;
+  }
+
+  // Adjust outline padding
+  .mdc-notched-outline {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing {
+      border-radius: 4px;
+    }
+  }
+}
+
+// Form layout styles
+.form-field {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+
+  > label {
+    min-width: 160px;
+    padding-top: 8px;
+    color: rgba(0, 0, 0, 0.87);
+    font-weight: 500;
+    text-align: right;
+    font-family: $app-font;
+    font-size: 14px;
+  }
+
+  .field-container {
+    flex: 1;
+    max-width: 500px;
+  }
+
+  // Compact textarea
+  textarea.mat-mdc-input-element {
+    min-height: 60px;
+    resize: vertical;
+  }
+}
+
+// Button styles
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button {
+  font-family: $app-font !important;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+}
+
+.mat-mdc-button.mat-primary,
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary {
+  --mdc-filled-button-container-color: #009bda;
+  --mdc-filled-button-label-text-color: #ffffff;
+  height: 36px;
+  min-width: 100px;
+}
+
+// Stepper styles
+.mat-stepper-horizontal {
+  font-family: $app-font;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+
+  .mat-step-label {
+    font-family: $app-font;
+    font-size: 14px;
+  }
+
+  .mat-step-icon {
+    height: 24px;
+    width: 24px;
+  }
+}
+
+// Error and hint styles
+.mat-mdc-form-field-error,
+.mat-mdc-form-field-hint {
+  font-family: $app-font;
+  font-size: 12px;
+  margin-top: 2px;
+  line-height: 1.2;
+}
+
+// Global styles
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: $app-font;
+  font-size: 14px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #fafafa;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+// Container styles
+.container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+// Button row styles
+.button-row {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+// Expansion Panel styles
+.change-details-panel {
+  margin: 16px 0 24px;
+  
+  .mat-expansion-panel-header {
+    font-family: $app-font;
+    height: 48px;
+    
+    .mat-expansion-panel-header-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+
+  &.mat-expanded {
+    margin-bottom: 24px;
+  }
+
+  .form-field {
+    margin-bottom: 16px;
+    
+    &:last-child {
+      margin-bottom: 8px;
+    }
+  }
+}
+
+// Checkbox styles
+.mat-mdc-checkbox {
+  font-family: $app-font;
+  font-size: 14px;
+}
+
+// Expansion Panel styles for Feed Details
+mat-step-content {
+  .mat-expansion-panel {
+    margin-bottom: 16px;
+    
+    &:last-of-type {
+      margin-bottom: 24px;
+    }
+  }
+}
+
+.mat-expansion-panel-header {
+  height: 48px !important;
+  
+  .mat-expansion-panel-header-title {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
