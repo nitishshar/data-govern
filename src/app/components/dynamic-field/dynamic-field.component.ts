@@ -6,10 +6,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FeedDataCategory, FormField } from '../../interfaces/form-field.interface';
-import { FieldLayout } from '../../interfaces/field-layout.enum';
+import { FormField } from '../../interfaces/form-field.interface';
 import { FormStateService } from '../../services/form-state.service';
-import { FeedDataCategoryMapping, FeedDetails } from '../../interfaces/feed-form.interface';
+import { FeedDataCategoryMapping, FieldLayout } from '../../interfaces/feed-form.interface';
 import { debounceTime } from 'rxjs';
 
 @Component({

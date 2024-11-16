@@ -13,13 +13,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DynamicFieldComponent } from '../dynamic-field/dynamic-field.component';
-import { FieldLayout } from '../../interfaces/field-layout.enum';
+
 import { FEED_DETAILS_CONFIG, groupFieldsByCategory } from '../../constants/feed-details.config';
 import { FormSection, FeedDataCategory, FormField } from '../../interfaces/form-field.interface';
 import {  } from '../../constants/feed-details.config';
 import { FormStateService } from '../../services/form-state.service';
 import { FeedDataCategoryMapping, FormCategory } from '../../interfaces/feed-form.interface';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { FieldLayout } from '../../interfaces/feed-form.interface';
 
 
 @Component({
@@ -57,7 +58,7 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
   feedAttributesForm!: FormGroup;
   feedDetailsConfig: FormSection[] = [];
   
-  currentLayout = signal<FieldLayout>(FieldLayout.VERTICAL);
+  currentLayout = signal<FieldLayout>(FieldLayout.EXPANSION);
   isSaving = signal<boolean>(false);
   showValidation = signal<boolean>(false);
   expandedPanels = signal<Set<string>>(new Set());
@@ -86,6 +87,22 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
   private formChanges = new Subject<{category: FormCategory; fieldName: string; value: any}>();
+
+  protected readonly layoutOptions = [
+    { value: FieldLayout.EXPANSION, icon: 'expand_more', label: 'Expansion View' },
+    { value: FieldLayout.GRID, icon: 'grid_view', label: 'Grid View' },
+    { value: FieldLayout.CARD, icon: 'dashboard', label: 'Card View' }
+  ];
+
+  protected basicSection = {
+    icon: 'description',
+    title: 'Basic Information'
+  };
+
+  protected changeDetailsSection = {
+    icon: 'change_circle',
+    title: 'Change Details'
+  };
 
   constructor(private fb: FormBuilder, private formStateService: FormStateService) {
     this.feedDetailsConfig = groupFieldsByCategory(FEED_DETAILS_CONFIG);

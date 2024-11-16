@@ -36,7 +36,10 @@
         (opened)="togglePanel('changeDetails')"
         formGroupName="changeDetails">
         <mat-expansion-panel-header>
-          <mat-panel-title>Change Details</mat-panel-title>
+          <mat-panel-title>
+            <mat-icon class="section-icon">{{changeDetailsSection.icon}}</mat-icon>
+            {{changeDetailsSection.title}}
+          </mat-panel-title>
           <mat-panel-description>
             Deployment, Review & Change Information
             <mat-error *ngIf="showValidation() && basicDetailsForm.get('changeDetails')?.invalid">
@@ -148,24 +151,65 @@
 
   <mat-step [stepControl]="feedDetailsForm">
     <ng-template matStepLabel>Feed Details</ng-template>
+    
+    <!-- Layout Toolbar -->
+    <div class="layout-toolbar">
+      <div class="toolbar-content">
+        <h3>Configure Feed Details</h3>
+        <mat-button-toggle-group [value]="currentLayout()" (change)="onLayoutChange($event.value)">
+          <mat-button-toggle *ngFor="let layout of layoutOptions" [value]="layout.value">
+            <mat-icon>{{layout.icon}}</mat-icon>
+            <span>{{layout.label}}</span>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+
     <form [formGroup]="feedDetailsForm">
-      
-      <mat-expansion-panel *ngFor="let section of feedDetailsConfig" class="section-panel">
-        <mat-expansion-panel-header>
-          <mat-panel-title>{{section.title}}</mat-panel-title>
-        </mat-expansion-panel-header>
-        
-        <div [formGroupName]="getSectionGroupName(section.category)" 
-             class="fields-container">
-          <app-dynamic-field 
-            *ngFor="let field of section.fields"
-            [field]="field" 
-            [form]="getFormGroup(section)"
-            [layout]="currentLayout()"
-            [showValidation]="showValidation()">
-          </app-dynamic-field>
+      <div [ngClass]="'layout-' + currentLayout()">
+        <!-- Expansion Panel Layout -->
+        <ng-container *ngIf="currentLayout() === FieldLayout.EXPANSION">
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let section of feedDetailsConfig" expanded>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon class="section-icon">{{section.icon || 'article'}}</mat-icon>
+                  {{section.title}}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              
+              <div class="fields-container">
+                <app-dynamic-field 
+                  *ngFor="let field of section.fields"
+                  [field]="field"
+                  [form]="getFormGroup(section)"
+                  [layout]="currentLayout()"
+                  [showValidation]="showValidation()">
+                </app-dynamic-field>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </ng-container>
+
+        <!-- Grid/Card Layouts -->
+        <div class="section-grid" *ngIf="currentLayout() !== FieldLayout.EXPANSION">
+          <div class="section-card" *ngFor="let section of feedDetailsConfig">
+            <div class="section-header">
+              <mat-icon>{{section.icon || 'article'}}</mat-icon>
+              <h4>{{section.title}}</h4>
+            </div>
+            <div class="fields-container">
+              <app-dynamic-field 
+                *ngFor="let field of section.fields"
+                [field]="field"
+                [form]="getFormGroup(section)"
+                [layout]="currentLayout()"
+                [showValidation]="showValidation()">
+              </app-dynamic-field>
+            </div>
+          </div>
         </div>
-      </mat-expansion-panel>
+      </div>
 
       <div class="button-row">
         <button mat-button matStepperPrevious>Back</button>

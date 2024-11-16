@@ -37,8 +37,9 @@ export interface FormField {
 }
 
 export interface FormSection {
-  title: string;
   category: FeedDataCategory;
+  title: string;
+  icon?: string;
   fields: FormField[];
 }
 

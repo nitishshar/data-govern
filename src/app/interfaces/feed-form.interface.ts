@@ -75,3 +75,11 @@ export const FeedDataCategoryMapping: Record<FeedDataCategory, FormCategory> = {
   [FeedDataCategory.FEED_CONTROL]: 'feedControlData',
   [FeedDataCategory.FEED_SUPPORT]: 'feedSupportData'
 }; 
+
+export enum FieldLayout {
+  EXPANSION = 'expansion',
+  GRID = 'grid',
+  CARD = 'card',
+  VERTICAL = 'vertical',
+  HORIZONTAL = 'horizontal'
+} 
