@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -42,6 +42,10 @@ import {  } from '../../constants/feed-details.config';
   styleUrls: ['./form-builder.component.scss']
 })
 export class FormBuilderComponent implements OnInit {
+  @Input() initialData?: any;
+  @Input() isEditMode = false;
+  @Output() formSubmit = new EventEmitter<any>();
+
   protected readonly FieldLayout = FieldLayout;
   
   isLinear = false;
@@ -83,27 +87,33 @@ export class FormBuilderComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForms();
+    if (this.initialData && this.isEditMode) {
+      this.patchFormValues(this.initialData);
+    }
   }
 
   private initializeForms() {
-    this.basicDetailsForm = this.fb.group({
-      basicDetails: this.fb.group({
-        title: [''],
-        description: ['']
-      }),
-      changeDetails: this.fb.group({
-        targetDeploymentDate: [null],
-        reviewalDate: [null],
-        status: [''],
-        changeType: [''],
-        changeDescription: [''],
-        jiraKey: [''],
-        dependencies: ['']
-      })
-    });
-
+    this.basicDetailsForm = this.createBasicDetailsForm();
     this.feedDetailsForm = this.createFeedDetailsForm();
     this.feedAttributesForm = this.fb.group({});
+  }
+
+  private createBasicDetailsForm(): FormGroup {
+    return this.fb.group({
+      basicDetails: this.fb.group({
+        title: [this.initialData?.basicDetails?.title || '', Validators.required],
+        description: [this.initialData?.basicDetails?.description || '', Validators.required]
+      }),
+      changeDetails: this.fb.group({
+        targetDeploymentDate: [this.initialData?.changeDetails?.targetDeploymentDate || null],
+        reviewalDate: [this.initialData?.changeDetails?.reviewalDate || null],
+        status: [this.initialData?.changeDetails?.status || ''],
+        changeType: [this.initialData?.changeDetails?.changeType || ''],
+        changeDescription: [this.initialData?.changeDetails?.changeDescription || ''],
+        jiraKey: [this.initialData?.changeDetails?.jiraKey || ''],
+        dependencies: [this.initialData?.changeDetails?.dependencies || '']
+      })
+    });
   }
 
   private createFeedDetailsForm(): FormGroup {
@@ -111,16 +121,49 @@ export class FormBuilderComponent implements OnInit {
 
     this.feedDetailsConfig.forEach((section: FormSection) => {
       const controls: { [key: string]: any } = {};
+      const sectionKey = this.getSectionGroupName(section.category);
       
       section.fields.forEach(field => {
-        controls[field.name] = [''];
+        const initialValue = this.initialData?.[sectionKey]?.[field.name] || '';
+        const validators = this.getValidators(field);
+        controls[field.name] = [initialValue, validators];
       });
 
-      const categoryKey = this.getSectionGroupName(section.category);
-      formGroups[categoryKey] = this.fb.group(controls);
+      formGroups[sectionKey] = this.fb.group(controls);
     });
 
     return this.fb.group(formGroups);
+  }
+
+  public patchFormValues(data: any) {
+    if (data.basicDetails || data.changeDetails) {
+      this.basicDetailsForm.patchValue(data);
+    }
+
+    // Patch feed details form by section
+    Object.keys(data).forEach(key => {
+      if (key.endsWith('Data')) { // matches feedProfileData, feedTechnicalData, etc.
+        const formGroup = this.feedDetailsForm.get(key);
+        if (formGroup) {
+          formGroup.patchValue(data[key]);
+        }
+      }
+    });
+  }
+
+  // Add method to get current form values
+  public getFormValues(): any {
+    return {
+      ...this.basicDetailsForm.value,
+      ...this.feedDetailsForm.value
+    };
+  }
+
+  // Add method to reset forms
+  public resetForms() {
+    this.basicDetailsForm.reset();
+    this.feedDetailsForm.reset();
+    this.feedAttributesForm.reset();
   }
 
   getFormGroup(sectionOrCategory: FormSection | FeedDataCategory): FormGroup {
@@ -226,6 +269,13 @@ export class FormBuilderComponent implements OnInit {
       await new Promise(resolve => setTimeout(resolve, 1000));
     } finally {
       this.isSaving.set(false);
+    }
+  }
+
+  onSubmit() {
+    if (this.basicDetailsForm.valid && this.feedDetailsForm.valid) {
+      const formData = this.getFormValues();
+      this.formSubmit.emit(formData);
     }
   }
 } 
