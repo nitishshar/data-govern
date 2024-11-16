@@ -1,160 +1,156 @@
-<div class="form-header">
-  <h2>{{isEditMode ? 'Edit Feed' : 'Create New Feed'}}</h2>
-</div>
-
-<mat-stepper [linear]="isLinear" #stepper>
-  <mat-step [stepControl]="basicDetailsForm">
-    <ng-template matStepLabel>Basic Details</ng-template>
-    <form [formGroup]="basicDetailsForm">
-      <div formGroupName="basicDetails">
-        <div class="form-field">
-          <label>Title</label>
-          <mat-form-field appearance="outline">
-            <input matInput formControlName="title" placeholder="Enter title">
-            <mat-error *ngIf="showValidation() && basicDetailsForm.get('basicDetails.title')?.errors?.['required']">
-              Required
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="form-field">
-          <label>Description</label>
-          <mat-form-field appearance="outline">
-            <textarea matInput 
-                      formControlName="description" 
-                      placeholder="Enter description"
-                      rows="3"></textarea>
-            <mat-error *ngIf="showValidation() && basicDetailsForm.get('basicDetails.description')?.errors?.['required']">
-              Required
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <mat-expansion-panel 
-        [expanded]="isPanelExpanded('changeDetails')"
-        (opened)="togglePanel('changeDetails')"
-        formGroupName="changeDetails">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon class="section-icon">{{changeDetailsSection.icon}}</mat-icon>
-            {{changeDetailsSection.title}}
-          </mat-panel-title>
-          <mat-panel-description>
-            Deployment, Review & Change Information
-            <mat-error *ngIf="showValidation() && basicDetailsForm.get('changeDetails')?.invalid">
-              Required fields missing
-            </mat-error>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <div class="change-details-container">
+<div class="stepper-container">
+  <mat-stepper [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="basicDetailsForm">
+      <ng-template matStepLabel>Basic Details</ng-template>
+      <form [formGroup]="basicDetailsForm">
+        <div formGroupName="basicDetails">
           <div class="form-field">
-            <label>Target Deployment Date</label>
+            <label>Title</label>
             <mat-form-field appearance="outline">
-              <input matInput 
-                     [matDatepicker]="deploymentPicker"
-                     formControlName="targetDeploymentDate"
-                     placeholder="Choose deployment date">
-              <mat-datepicker-toggle matSuffix [for]="deploymentPicker"></mat-datepicker-toggle>
-              <mat-datepicker #deploymentPicker></mat-datepicker>
-              <mat-error *ngIf="basicDetailsForm.get('changeDetails.targetDeploymentDate')?.errors?.['required']">
+              <input matInput formControlName="title" placeholder="Enter title">
+              <mat-error *ngIf="showValidation() && basicDetailsForm.get('basicDetails.title')?.errors?.['required']">
                 Required
               </mat-error>
             </mat-form-field>
           </div>
 
           <div class="form-field">
-            <label>Review Date</label>
-            <mat-form-field appearance="outline">
-              <input matInput 
-                     [matDatepicker]="reviewPicker"
-                     formControlName="reviewalDate"
-                     placeholder="Choose review date">
-              <mat-datepicker-toggle matSuffix [for]="reviewPicker"></mat-datepicker-toggle>
-              <mat-datepicker #reviewPicker></mat-datepicker>
-              <mat-error *ngIf="basicDetailsForm.get('changeDetails.reviewalDate')?.errors?.['required']">
-                Required
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="form-field">
-            <label>Status</label>
-            <mat-form-field appearance="outline">
-              <mat-select matInput formControlName="status">
-                <mat-option *ngFor="let status of statusOptions" [value]="status">{{status}}</mat-option>
-              </mat-select>
-              <mat-error *ngIf="basicDetailsForm.get('changeDetails.status')?.errors?.['required']">
-                Required
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="form-field">
-            <label>Change Type</label>
-            <mat-form-field appearance="outline">
-              <mat-select matInput formControlName="changeType">
-                <mat-option *ngFor="let type of changeTypeOptions" [value]="type">{{type}}</mat-option>
-              </mat-select>
-              <mat-error *ngIf="basicDetailsForm.get('changeDetails.changeType')?.errors?.['required']">
-                Required
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="form-field">
-            <label>Change Description</label>
+            <label>Description</label>
             <mat-form-field appearance="outline">
               <textarea matInput 
-                        formControlName="changeDescription" 
-                        rows="3"
-                        placeholder="Describe the change"></textarea>
-              <mat-error *ngIf="basicDetailsForm.get('changeDetails.changeDescription')?.errors?.['required']">
+                        formControlName="description" 
+                        placeholder="Enter description"
+                        rows="3"></textarea>
+              <mat-error *ngIf="showValidation() && basicDetailsForm.get('basicDetails.description')?.errors?.['required']">
                 Required
               </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="form-field">
-            <label>JIRA Key</label>
-            <mat-form-field appearance="outline">
-              <input matInput 
-                     formControlName="jiraKey"
-                     placeholder="Enter JIRA key">
-              <mat-error *ngIf="showValidation() && basicDetailsForm.get('changeDetails.jiraKey')?.errors?.['required']">
-                Required
-              </mat-error>
-              <mat-error *ngIf="showValidation() && basicDetailsForm.get('changeDetails.jiraKey')?.errors?.['pattern']">
-                Must be in format: PROJECT-123
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="form-field">
-            <label>Dependencies</label>
-            <mat-form-field appearance="outline">
-              <textarea matInput 
-                        formControlName="dependencies" 
-                        rows="2"
-                        placeholder="List any dependencies (optional)"></textarea>
             </mat-form-field>
           </div>
         </div>
-      </mat-expansion-panel>
 
-      <div class="button-row">
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </form>
-  </mat-step>
+        <mat-expansion-panel 
+          [expanded]="isPanelExpanded('changeDetails')"
+          (opened)="togglePanel('changeDetails')"
+          formGroupName="changeDetails">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="section-icon">{{changeDetailsSection.icon}}</mat-icon>
+              {{changeDetailsSection.title}}
+            </mat-panel-title>
+            <mat-panel-description>
+              Deployment, Review & Change Information
+              <mat-error *ngIf="showValidation() && basicDetailsForm.get('changeDetails')?.invalid">
+                Required fields missing
+              </mat-error>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
 
-  <mat-step [stepControl]="feedDetailsForm">
-    <ng-template matStepLabel>Feed Details</ng-template>
-    
-    <!-- Layout Toolbar -->
-    <div class="layout-toolbar">
-      <div class="toolbar-content">
+          <div class="change-details-container">
+            <div class="form-field">
+              <label>Target Deployment Date</label>
+              <mat-form-field appearance="outline">
+                <input matInput 
+                       [matDatepicker]="deploymentPicker"
+                       formControlName="targetDeploymentDate"
+                       placeholder="Choose deployment date">
+                <mat-datepicker-toggle matSuffix [for]="deploymentPicker"></mat-datepicker-toggle>
+                <mat-datepicker #deploymentPicker></mat-datepicker>
+                <mat-error *ngIf="basicDetailsForm.get('changeDetails.targetDeploymentDate')?.errors?.['required']">
+                  Required
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-field">
+              <label>Review Date</label>
+              <mat-form-field appearance="outline">
+                <input matInput 
+                       [matDatepicker]="reviewPicker"
+                       formControlName="reviewalDate"
+                       placeholder="Choose review date">
+                <mat-datepicker-toggle matSuffix [for]="reviewPicker"></mat-datepicker-toggle>
+                <mat-datepicker #reviewPicker></mat-datepicker>
+                <mat-error *ngIf="basicDetailsForm.get('changeDetails.reviewalDate')?.errors?.['required']">
+                  Required
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-field">
+              <label>Status</label>
+              <mat-form-field appearance="outline">
+                <mat-select matInput formControlName="status">
+                  <mat-option *ngFor="let status of statusOptions" [value]="status">{{status}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="basicDetailsForm.get('changeDetails.status')?.errors?.['required']">
+                  Required
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-field">
+              <label>Change Type</label>
+              <mat-form-field appearance="outline">
+                <mat-select matInput formControlName="changeType">
+                  <mat-option *ngFor="let type of changeTypeOptions" [value]="type">{{type}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="basicDetailsForm.get('changeDetails.changeType')?.errors?.['required']">
+                  Required
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-field">
+              <label>Change Description</label>
+              <mat-form-field appearance="outline">
+                <textarea matInput 
+                          formControlName="changeDescription" 
+                          rows="3"
+                          placeholder="Describe the change"></textarea>
+                <mat-error *ngIf="basicDetailsForm.get('changeDetails.changeDescription')?.errors?.['required']">
+                  Required
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-field">
+              <label>JIRA Key</label>
+              <mat-form-field appearance="outline">
+                <input matInput 
+                       formControlName="jiraKey"
+                       placeholder="Enter JIRA key">
+                <mat-error *ngIf="showValidation() && basicDetailsForm.get('changeDetails.jiraKey')?.errors?.['required']">
+                  Required
+                </mat-error>
+                <mat-error *ngIf="showValidation() && basicDetailsForm.get('changeDetails.jiraKey')?.errors?.['pattern']">
+                  Must be in format: PROJECT-123
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-field">
+              <label>Dependencies</label>
+              <mat-form-field appearance="outline">
+                <textarea matInput 
+                          formControlName="dependencies" 
+                          rows="2"
+                          placeholder="List any dependencies (optional)"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <div class="button-row">
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="feedDetailsForm">
+      <ng-template matStepLabel>Feed Details</ng-template>
+      
+      <!-- Layout Toolbar -->
+      <div class="layout-toolbar">
         <h3>Configure Feed Details</h3>
         <mat-button-toggle-group [value]="currentLayout()" (change)="onLayoutChange($event.value)">
           <mat-button-toggle *ngFor="let layout of layoutOptions" [value]="layout.value">
@@ -163,21 +159,40 @@
           </mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-    </div>
 
-    <form [formGroup]="feedDetailsForm">
-      <div [ngClass]="'layout-' + currentLayout()">
-        <!-- Expansion Panel Layout -->
-        <ng-container *ngIf="currentLayout() === FieldLayout.EXPANSION">
-          <mat-accordion>
-            <mat-expansion-panel *ngFor="let section of feedDetailsConfig" expanded>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  <mat-icon class="section-icon">{{section.icon || 'article'}}</mat-icon>
-                  {{section.title}}
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              
+      <form [formGroup]="feedDetailsForm">
+        <div [ngClass]="'layout-' + currentLayout()">
+          <!-- Expansion Panel Layout -->
+          <ng-container *ngIf="currentLayout() === FieldLayout.EXPANSION">
+            <mat-accordion>
+              <mat-expansion-panel *ngFor="let section of feedDetailsConfig" expanded>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-icon class="section-icon">{{section.icon || 'article'}}</mat-icon>
+                    {{section.title}}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                
+                <div class="fields-container">
+                  <app-dynamic-field 
+                    *ngFor="let field of section.fields"
+                    [field]="field"
+                    [form]="getFormGroup(section)"
+                    [layout]="currentLayout()"
+                    [showValidation]="showValidation()">
+                  </app-dynamic-field>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </ng-container>
+
+          <!-- Grid/Card Layouts -->
+          <div class="section-grid" *ngIf="currentLayout() !== FieldLayout.EXPANSION">
+            <div class="section-card" *ngFor="let section of feedDetailsConfig">
+              <div class="section-header">
+                <mat-icon>{{section.icon || 'article'}}</mat-icon>
+                <h4>{{section.title}}</h4>
+              </div>
               <div class="fields-container">
                 <app-dynamic-field 
                   *ngFor="let field of section.fields"
@@ -187,53 +202,34 @@
                   [showValidation]="showValidation()">
                 </app-dynamic-field>
               </div>
-            </mat-expansion-panel>
-          </mat-accordion>
-        </ng-container>
-
-        <!-- Grid/Card Layouts -->
-        <div class="section-grid" *ngIf="currentLayout() !== FieldLayout.EXPANSION">
-          <div class="section-card" *ngFor="let section of feedDetailsConfig">
-            <div class="section-header">
-              <mat-icon>{{section.icon || 'article'}}</mat-icon>
-              <h4>{{section.title}}</h4>
-            </div>
-            <div class="fields-container">
-              <app-dynamic-field 
-                *ngFor="let field of section.fields"
-                [field]="field"
-                [form]="getFormGroup(section)"
-                [layout]="currentLayout()"
-                [showValidation]="showValidation()">
-              </app-dynamic-field>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="button-row">
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </form>
-  </mat-step>
+        <div class="button-row">
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
 
-  <mat-step [stepControl]="feedAttributesForm">
-    <ng-template matStepLabel>Feed Attributes</ng-template>
-    <form [formGroup]="feedAttributesForm">
-      <!-- Feed Attributes content -->
-      <div class="button-row">
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-raised-button 
-                color="primary"
-                (click)="onSubmit()"
-                [disabled]="isSaving()">
-          {{ isSaving() ? 'Saving...' : 'Submit' }}
-        </button>
-      </div>
-    </form>
-  </mat-step>
-</mat-stepper> 
+    <mat-step [stepControl]="feedAttributesForm">
+      <ng-template matStepLabel>Feed Attributes</ng-template>
+      <form [formGroup]="feedAttributesForm">
+        <!-- Feed Attributes content -->
+        <div class="button-row">
+          <button mat-stroked-button (click)="onReset()">Reset</button>
+          <button mat-raised-button 
+                  color="primary" 
+                  (click)="onSubmit()"
+                  [disabled]="isSaving()">
+            {{ isSaving() ? 'Saving...' : 'Submit' }}
+          </button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-stepper>
+</div>
 
 <div class="form-actions">
   <button mat-button (click)="resetForms()">Reset</button>

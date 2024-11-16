@@ -132,16 +132,27 @@ body {
 
 // Container styles
 .container {
-  padding: 20px;
-  max-width: 1000px;
+  width: 80vw;
   margin: 0 auto;
+  padding: 20px;
 }
 
 // Button row styles
 .button-row {
   display: flex;
-  gap: 8px;
-  justify-content: flex-end;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  margin-top: 16px;
+
+  button {
+    width: 120px;
+  }
+
+  .mat-raised-button.mat-primary {
+    margin-top: 4px;
+  }
 }
 
 // Expansion Panel styles
@@ -194,5 +205,104 @@ mat-step-content {
   .mat-expansion-panel-header-title {
     font-size: 14px;
     font-weight: 500;
+  }
+}
+
+// Add new styles for the form builder
+app-form-builder {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  
+  .mat-stepper-horizontal {
+    width: 80vw;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Update stepper styles
+.mat-stepper-horizontal {
+  font-family: $app-font;
+  padding: 24px;
+
+  .mat-horizontal-content-container {
+    padding: 0 24px 24px 24px;
+  }
+
+  .mat-horizontal-stepper-header-container {
+    padding: 0 24px;
+  }
+}
+
+// Update form field styles for better spacing in 80% width
+.form-field {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+
+  > label {
+    min-width: 140px;
+    padding-top: 8px;
+  }
+
+  .field-container {
+    flex: 1;
+    max-width: none;
+  }
+}
+
+// Update expansion panel styles for better fit
+mat-step-content {
+  .mat-expansion-panel {
+    margin: 0 0 16px 0;
+    
+    .mat-expansion-panel-body {
+      padding: 0 24px 16px;
+    }
+  }
+}
+
+// Update grid layouts for better responsiveness
+.fields-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 16px 0;
+}
+
+// Update button row for better alignment
+.button-row {
+  padding: 16px 0;
+  margin-top: 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+// Add responsive adjustments
+@media (max-width: 1200px) {
+  .container,
+  app-form-builder .mat-stepper-horizontal {
+    width: 90vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .container,
+  app-form-builder .mat-stepper-horizontal {
+    width: 95vw;
+  }
+
+  .form-field {
+    flex-direction: column;
+    gap: 8px;
+
+    > label {
+      min-width: 0;
+      text-align: left;
+      padding-top: 0;
+    }
   }
 }

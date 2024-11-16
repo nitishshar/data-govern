@@ -372,4 +372,22 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  onReset(): void {
+    // Reset all forms to their initial state
+    this.basicDetailsForm.reset();
+    this.feedDetailsForm.reset();
+    this.feedAttributesForm.reset();
+
+    // Reset signals
+    this.showValidation.set(false);
+    this.expandedPanels.set(new Set());
+    
+    // If there's initial data, repopulate the forms
+    if (this.initialData) {
+      this.basicDetailsForm.patchValue(this.initialData);
+      this.feedDetailsForm.patchValue(this.initialData);
+      this.feedAttributesForm.patchValue(this.initialData);
+    }
+  }
 } 
