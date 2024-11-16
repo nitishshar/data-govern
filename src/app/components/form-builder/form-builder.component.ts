@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, signal, computed, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -19,6 +19,7 @@ import { FormSection, FeedDataCategory, FormField } from '../../interfaces/form-
 import {  } from '../../constants/feed-details.config';
 import { FormStateService } from '../../services/form-state.service';
 import { FeedDataCategoryMapping, FormCategory } from '../../interfaces/feed-form.interface';
+import { Subject, debounceTime, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -43,7 +44,7 @@ import { FeedDataCategoryMapping, FormCategory } from '../../interfaces/feed-for
   templateUrl: './form-builder.component.html',
   styleUrls: ['./form-builder.component.scss']
 })
-export class FormBuilderComponent implements OnInit {
+export class FormBuilderComponent implements OnInit, OnDestroy {
   @Input() initialData?: any;
   @Input() isEditMode = false;
   @Output() formSubmit = new EventEmitter<any>();
@@ -83,15 +84,27 @@ export class FormBuilderComponent implements OnInit {
     'Emergency Change'
   ];
 
+  private destroy$ = new Subject<void>();
+  private formChanges = new Subject<{category: FormCategory; fieldName: string; value: any}>();
+
   constructor(private fb: FormBuilder, private formStateService: FormStateService) {
     this.feedDetailsConfig = groupFieldsByCategory(FEED_DETAILS_CONFIG);
+    
+    // Setup debounced form changes
+    this.formChanges.pipe(
+      debounceTime(500),
+      takeUntil(this.destroy$)
+    ).subscribe(({category, fieldName, value}) => {
+      this.formStateService.updateField(category, fieldName, value);
+    });
   }
 
   ngOnInit() {
-    this.initializeForms();
+    this.initializeForms(); 
     if (this.initialData && this.isEditMode) {
       this.patchFormValues(this.initialData);
     }
+    this.subscribeToFormChanges();
   }
 
   private initializeForms() {
@@ -302,5 +315,44 @@ export class FormBuilderComponent implements OnInit {
       return FeedDataCategoryMapping[category as FeedDataCategory];
     }
     return category as FormCategory;
+  }
+
+  private subscribeToFormChanges() {
+    // Subscribe to basic details form controls individually
+    const basicDetailsGroup = this.basicDetailsForm.get('basicDetails') as FormGroup;
+    if (basicDetailsGroup) {
+      Object.keys(basicDetailsGroup.controls).forEach(controlName => {
+        basicDetailsGroup.get(controlName)?.valueChanges
+          .pipe(takeUntil(this.destroy$))
+          .subscribe(value => {
+            this.formChanges.next({
+              category: 'basicDetails',
+              fieldName: controlName,
+              value
+            });
+          });
+      });
+    }
+
+    // Subscribe to change details form controls individually
+    const changeDetailsGroup = this.basicDetailsForm.get('changeDetails') as FormGroup;
+    if (changeDetailsGroup) {
+      Object.keys(changeDetailsGroup.controls).forEach(controlName => {
+        changeDetailsGroup.get(controlName)?.valueChanges
+          .pipe(takeUntil(this.destroy$))
+          .subscribe(value => {
+            this.formChanges.next({
+              category: 'changeDetails',
+              fieldName: controlName,
+              value
+            });
+          });
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 } 

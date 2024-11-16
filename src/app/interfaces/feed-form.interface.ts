@@ -1,26 +1,17 @@
 import { FeedDataCategory } from "./form-field.interface";
 
-export interface FeedFormData {
+export type FormCategory = 
+  | 'basicDetails'
+  | 'changeDetails'
+  | 'feedProfileData'
+  | 'feedTechnicalData'
+  | 'feedControlData'
+  | 'feedSupportData';
+
+export interface BasicDetails {
   title: string;
   description: string;
-  feedDetails: FeedDetails;
-}
-
-export interface FeedDetails {
-  feedProfileData: Record<string, any>;
-  feedTechnicalData: Record<string, any>;
-  feedControlData: Record<string, any>;
-  feedSupportData: Record<string, any>;
-  attributes: FeedAttribute[];
-  changeDataDetail: ChangeDetails;
-  commentaries: Commentary[];
-  audit: AuditLog[];
   [key: string]: any;
-}
-
-export interface FeedAttribute {
-  name: string;
-  value: any;
 }
 
 export interface ChangeDetails {
@@ -30,7 +21,38 @@ export interface ChangeDetails {
   changeType: string;
   changeDescription: string;
   jiraKey: string;
+  dependencies?: string;
   [key: string]: any;
+}
+
+export interface FeedDetails {
+  feedProfileData: Record<string, any>;
+  feedTechnicalData: Record<string, any>;
+  feedControlData: Record<string, any>;
+  feedSupportData: Record<string, any>;
+  attributes: FeedAttribute[];
+  commentaries: Commentary[];
+  audit: AuditLog[];
+  [key: string]: any;
+}
+
+export interface FeedFormData {
+  basicDetails: BasicDetails;
+  changeDetails: ChangeDetails;
+  feedDetails: {
+    feedProfileData: Record<string, any>;
+    feedTechnicalData: Record<string, any>;
+    feedControlData: Record<string, any>;
+    feedSupportData: Record<string, any>;
+    attributes: FeedAttribute[];
+    commentaries: Commentary[];
+    audit: AuditLog[];
+  }
+}
+
+export interface FeedAttribute {
+  name: string;
+  value: any;
 }
 
 export interface Commentary {
@@ -46,14 +68,6 @@ export interface AuditLog {
   timestamp: Date;
   user_id: string;
 }
-
-export type FormCategory = 
-  | 'basicDetails'
-  | 'changeDetails'
-  | 'feedProfileData'
-  | 'feedTechnicalData'
-  | 'feedControlData'
-  | 'feedSupportData';
 
 export const FeedDataCategoryMapping: Record<FeedDataCategory, FormCategory> = {
   [FeedDataCategory.FEED_PROFILE]: 'feedProfileData',

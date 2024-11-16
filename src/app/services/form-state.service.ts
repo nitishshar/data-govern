@@ -1,29 +1,34 @@
 import { Injectable, signal } from '@angular/core';
 import { Observable, of, delay } from 'rxjs';
 import { StorageUtil } from '../utils/storage.util';
-import { 
-  FeedFormData, 
-  AuditLog, 
+import {
+  FeedFormData,
+  AuditLog,
   FeedAttribute,
   ChangeDetails,
-  Commentary, 
-  FormCategory
+  Commentary,
+  FormCategory,
 } from '../interfaces/feed-form.interface';
 
 const STORAGE_KEYS = {
   FORM_DATA: 'feed_form_data',
-  AUDIT_LOG: 'feed_form_audit'
+  AUDIT_LOG: 'feed_form_audit',
 } as const;
 
-type CategoryData = Record<string, any> | AuditLog[] | FeedAttribute[] | ChangeDetails | Commentary[];
+type CategoryData =
+  | Record<string, any>
+  | AuditLog[]
+  | FeedAttribute[]
+  | ChangeDetails
+  | Commentary[];
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FormStateService {
   private initialState = signal<FeedFormData | null>(null);
   private currentState = signal<FeedFormData | null>(null);
-  auditLogs = signal<AuditLog[]>([]);
+  private auditLogs = signal<AuditLog[]>([]);
   readonly debugMode = signal<boolean>(true);
 
   constructor() {
@@ -33,8 +38,10 @@ export class FormStateService {
   private loadFromStorage(): void {
     try {
       const storedData = StorageUtil.get<FeedFormData>(STORAGE_KEYS.FORM_DATA);
-      const storedAuditLogs = StorageUtil.get<AuditLog[]>(STORAGE_KEYS.AUDIT_LOG);
-      
+      const storedAuditLogs = StorageUtil.get<AuditLog[]>(
+        STORAGE_KEYS.AUDIT_LOG
+      );
+
       if (storedData) {
         this.initialState.set(storedData);
         this.currentState.set(storedData);
@@ -53,27 +60,30 @@ export class FormStateService {
 
   private initializeEmptyForm(): void {
     const emptyForm: FeedFormData = {
-      title: '',
-      description: '',
+      basicDetails: {
+        title: '',
+        description: '',
+      },
+      changeDetails: {
+        targetDeploymentDate: null,
+        reviewalDate: null,
+        status: '',
+        changeType: '',
+        changeDescription: '',
+        jiraKey: '',
+        dependencies: '',
+      },
       feedDetails: {
         feedProfileData: {},
         feedTechnicalData: {},
         feedControlData: {},
         feedSupportData: {},
         attributes: [],
-        changeDataDetail: {
-          targetDeploymentDate: null,
-          reviewalDate: null,
-          status: '',
-          changeType: '',
-          changeDescription: '',
-          jiraKey: ''
-        },
         commentaries: [],
-        audit: []
-      }
+        audit: [],
+      },
     };
-    
+
     this.initialState.set(emptyForm);
     this.currentState.set(emptyForm);
   }
@@ -98,59 +108,77 @@ export class FormStateService {
     return this.mockApiCall('submitForm', current);
   }
 
+  private getInitialFieldValue(category: FormCategory, fieldName: string): any {
+    const state = this.initialState();
+    if (!state) return undefined;
+
+    switch (category) {
+      case 'basicDetails':
+        return state.basicDetails?.[fieldName];
+      case 'changeDetails':
+        return state.changeDetails?.[fieldName];
+      default:
+        return state.feedDetails?.[category]?.[fieldName];
+    }
+  }
+
   updateField(category: FormCategory, fieldName: string, value: any) {
     const current = this.currentState();
     if (!current) return;
 
-    const previousValue = this.getFieldValue(category, fieldName);
-    
-    if (previousValue !== value) {
+    const initialValue = this.getInitialFieldValue(category, fieldName);
+
+    if (initialValue !== value) {
+      const fieldIdentifier = `${category}.${fieldName}`;
       const auditEntry: AuditLog = {
-        field_name: `${category}.${fieldName}`,
-        previous_value: previousValue ?? '',
+        field_name: fieldIdentifier,
+        previous_value: initialValue ?? '',
         new_value: value,
         timestamp: new Date(),
-        user_id: 'current-user'
+        user_id: 'current-user',
       };
 
-      this.auditLogs.update(logs => [...logs, auditEntry]);
-      console.log('Field Change Audit:', auditEntry);
+      this.auditLogs.update((logs) => {
+        const existingIndex = logs.findIndex(
+          (log) => log.field_name === fieldIdentifier
+        );
+        if (existingIndex >= 0) {
+          const updatedLogs = [...logs];
+          updatedLogs[existingIndex] = auditEntry;
+          return updatedLogs;
+        }
+        return [...logs, auditEntry];
+      });
     }
 
     const newState = structuredClone(current);
-    
-    if (category === 'basicDetails') {
-      newState.title = fieldName === 'title' ? value : newState.title;
-      newState.description = fieldName === 'description' ? value : newState.description;
-    } else if (category === 'changeDetails') {
-      newState.feedDetails.changeDataDetail = {
-        ...newState.feedDetails.changeDataDetail,
-        [fieldName]: value
-      };
-    } else {
-      newState.feedDetails = {
-        ...newState.feedDetails,
-        [category]: {
-          ...newState.feedDetails[category],
-          [fieldName]: value
-        }
-      };
+
+    switch (category) {
+      case 'basicDetails':
+        newState.basicDetails = {
+          ...newState.basicDetails,
+          [fieldName]: value,
+        };
+        break;
+      case 'changeDetails':
+        newState.changeDetails = {
+          ...newState.changeDetails,
+          [fieldName]: value,
+        };
+        break;
+      default:
+        newState.feedDetails = {
+          ...newState.feedDetails,
+          [category]: {
+            ...newState.feedDetails[category],
+            [fieldName]: value,
+          },
+        };
     }
-    
+
     this.currentState.set(newState);
-  }
-
-  private getFieldValue(category: FormCategory, fieldName: string): any {
-    const state = this.currentState();
-    if (!state) return undefined;
-
-    if (category === 'basicDetails') {
-      return fieldName === 'title' ? state.title : state.description;
-    } else if (category === 'changeDetails') {
-      return state.feedDetails.changeDataDetail[fieldName];
-    } else {
-      return state.feedDetails[category]?.[fieldName];
-    }
+    StorageUtil.set(STORAGE_KEYS.FORM_DATA, newState);
+    StorageUtil.set(STORAGE_KEYS.AUDIT_LOG, this.auditLogs());
   }
 
   private mockApiCall(operation: string, data: any): Observable<boolean> {
@@ -177,8 +205,8 @@ export class FormStateService {
       ...current,
       feedDetails: {
         ...current.feedDetails,
-        audit: this.auditLogs()
-      }
+        audit: this.auditLogs(),
+      },
     };
   }
-} 
+}
