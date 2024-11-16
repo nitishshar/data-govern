@@ -16,6 +16,8 @@ import { DynamicFieldComponent } from '../dynamic-field/dynamic-field.component'
 import { FieldLayout } from '../../interfaces/field-layout.enum';
 import { FEED_DETAILS_CONFIG, groupFieldsByCategory } from '../../constants/feed-details.config';
 import { FormSection, FeedDataCategory, FormField } from '../../interfaces/form-field.interface';
+import {  } from '../../constants/feed-details.config';
+
 
 @Component({
   selector: 'app-form-builder',

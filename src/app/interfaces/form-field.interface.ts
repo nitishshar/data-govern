@@ -7,10 +7,10 @@ export enum FormFieldType {
 }
 
 export enum FeedDataCategory {
-  PROFILE = 'profile',
-  TECHNICAL = 'technical',
-  CONTROL = 'control',
-  SUPPORT = 'support'
+  FEED_PROFILE = 'FEED_PROFILE',
+  FEED_TECHNICAL = 'FEED_TECHNICAL',
+  FEED_CONTROL = 'FEED_CONTROL',
+  FEED_SUPPORT = 'FEED_SUPPORT'
 }
 
 export interface FormField {
