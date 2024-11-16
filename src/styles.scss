@@ -4,6 +4,106 @@
 // Define font variables
 $app-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
+// Root level styles
+:root {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+// Container styles
+.stepper-container {
+  width: 80vw;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+// Update Material form field styles
+.mat-mdc-form-field {
+  width: 100%;
+  font-family: $app-font;
+  box-sizing: border-box;
+  
+  // Label color
+  .mdc-floating-label,
+  .mat-mdc-floating-label,
+  .mat-mdc-form-field-label {
+    color: #009bda !important;
+  }
+
+  .mat-mdc-form-field-wrapper {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  .mat-mdc-form-field-infix {
+    padding: 2px !important;
+    min-height: 32px !important;
+  }
+}
+
+// Update form builder styles
+.form-section {
+  padding: 1rem;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+
+  .fields-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    
+    app-dynamic-field {
+      flex: 1 1 23.4375em;
+      min-width: 23.4375em;
+      max-width: 31.25em;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  }
+}
+
+// Update expansion panel styles
+mat-accordion {
+  .mat-expansion-panel {
+    margin: 0 0 0.5rem 0;
+    box-sizing: border-box;
+    
+    .mat-expansion-panel-body {
+      padding: 0.5rem;
+    }
+  }
+}
+
+// Update grid/card layout styles
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(23.4375em, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+// Add to all elements to ensure consistent box sizing
+* {
+  box-sizing: border-box;
+}
+
 // Form field styles
 .mat-mdc-form-field {
   width: 100%;

@@ -134,6 +134,40 @@ import { debounceTime } from 'rxjs';
         }
       }
     }
+    .field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+
+  .field-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2px 0;
+    margin: 0;
+    box-sizing: border-box;
+
+    .field-label {
+      color: #009bda;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 0;
+      padding: 0;
+      line-height: 1.2;
+    }
+  }
+
+  mat-form-field {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
   `]
 })
 export class DynamicFieldComponent implements OnInit {
