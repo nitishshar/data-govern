@@ -85,23 +85,23 @@ export class FormBuilderComponent implements OnInit {
 
   private initializeForms() {
     this.basicDetailsForm = this.fb.group({
-      title: [''],
-      description: [''],
+      basicDetails: this.fb.group({
+        title: [''],
+        description: ['']
+      }),
       changeDetails: this.fb.group({
         targetDeploymentDate: [null],
         reviewalDate: [null],
         status: [''],
         changeType: [''],
         changeDescription: [''],
-        jiraKey: ['']
+        jiraKey: [''],
+        dependencies: ['']
       })
     });
 
     this.feedDetailsForm = this.createFeedDetailsForm();
-    
-    this.feedAttributesForm = this.fb.group({
-      // Add your feed attributes form controls here
-    });
+    this.feedAttributesForm = this.fb.group({});
   }
 
   private createFeedDetailsForm(): FormGroup {
