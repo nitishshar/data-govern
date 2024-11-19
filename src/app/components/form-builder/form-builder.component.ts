@@ -89,7 +89,7 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
   private formChanges = new Subject<{category: FormCategory; fieldName: string; value: any}>();
 
   protected readonly layoutOptions = [
-    { value: FieldLayout.EXPANSION, icon: 'expand_more', label: 'Expansion View' },
+    { value: FieldLayout.EXPANSION, icon: 'system_update_alt', label: 'Expansion View' },
     { value: FieldLayout.GRID, icon: 'grid_view', label: 'Grid View' },
     { value: FieldLayout.CARD, icon: 'dashboard', label: 'Card View' }
   ];

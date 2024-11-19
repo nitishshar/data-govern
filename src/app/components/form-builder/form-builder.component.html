@@ -1,11 +1,12 @@
+<div class="form-builder-container">
 <div class="stepper-container">
   <mat-stepper [linear]="isLinear" #stepper>
     <mat-step [stepControl]="basicDetailsForm">
       <ng-template matStepLabel>Basic Details</ng-template>
-      <form [formGroup]="basicDetailsForm">
+      <form [formGroup]="basicDetailsForm" class="basic-details-form">
         <div formGroupName="basicDetails">
           <div class="form-field">
-            <label>Title</label>
+            <label class="field-label" >Title</label>
             <mat-form-field appearance="outline">
               <input matInput formControlName="title" placeholder="Enter title">
               <mat-error *ngIf="showValidation() && basicDetailsForm.get('basicDetails.title')?.errors?.['required']">
@@ -15,7 +16,7 @@
           </div>
 
           <div class="form-field">
-            <label>Description</label>
+            <label class="field-label">Description</label>
             <mat-form-field appearance="outline">
               <textarea matInput 
                         formControlName="description" 
@@ -47,7 +48,7 @@
 
           <div class="change-details-container">
             <div class="form-field">
-              <label>Target Deployment Date</label>
+              <label class="field-label">Target Deployment Date</label>
               <mat-form-field appearance="outline">
                 <input matInput 
                        [matDatepicker]="deploymentPicker"
@@ -62,7 +63,7 @@
             </div>
 
             <div class="form-field">
-              <label>Review Date</label>
+              <label class="field-label">Review Date</label>
               <mat-form-field appearance="outline">
                 <input matInput 
                        [matDatepicker]="reviewPicker"
@@ -77,7 +78,7 @@
             </div>
 
             <div class="form-field">
-              <label>Status</label>
+              <label class="field-label">Status</label>
               <mat-form-field appearance="outline">
                 <mat-select matInput formControlName="status">
                   <mat-option *ngFor="let status of statusOptions" [value]="status">{{status}}</mat-option>
@@ -89,7 +90,7 @@
             </div>
 
             <div class="form-field">
-              <label>Change Type</label>
+              <label class="field-label">Change Type</label>
               <mat-form-field appearance="outline">
                 <mat-select matInput formControlName="changeType">
                   <mat-option *ngFor="let type of changeTypeOptions" [value]="type">{{type}}</mat-option>
@@ -101,7 +102,7 @@
             </div>
 
             <div class="form-field">
-              <label>Change Description</label>
+              <label class="field-label">Change Description</label>
               <mat-form-field appearance="outline">
                 <textarea matInput 
                           formControlName="changeDescription" 
@@ -114,7 +115,7 @@
             </div>
 
             <div class="form-field">
-              <label>JIRA Key</label>
+              <label class="field-label">JIRA Key</label>
               <mat-form-field appearance="outline">
                 <input matInput 
                        formControlName="jiraKey"
@@ -129,7 +130,7 @@
             </div>
 
             <div class="form-field">
-              <label>Dependencies</label>
+              <label class="field-label">Dependencies</label>
               <mat-form-field appearance="outline">
                 <textarea matInput 
                           formControlName="dependencies" 
@@ -146,16 +147,17 @@
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="feedDetailsForm">
+    <mat-step [stepControl]="feedDetailsForm" class="feed-details-form">
       <ng-template matStepLabel>Feed Details</ng-template>
       
       <!-- Layout Toolbar -->
       <div class="layout-toolbar">
         <h3>Configure Feed Details</h3>
-        <mat-button-toggle-group [value]="currentLayout()" (change)="onLayoutChange($event.value)">
+        <mat-button-toggle-group class="compact-toggle-group" [value]="currentLayout()" (change)="onLayoutChange($event.value)">
           <mat-button-toggle *ngFor="let layout of layoutOptions" [value]="layout.value">
+           
+            <!-- <span>{{layout.label}}</span> -->
             <mat-icon>{{layout.icon}}</mat-icon>
-            <span>{{layout.label}}</span>
           </mat-button-toggle>
         </mat-button-toggle-group>
       </div>
@@ -213,7 +215,7 @@
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="feedAttributesForm">
+    <mat-step [stepControl]="feedAttributesForm" class="feed-attributes-form">
       <ng-template matStepLabel>Feed Attributes</ng-template>
       <form [formGroup]="feedAttributesForm">
         <!-- Feed Attributes content -->
@@ -239,3 +241,4 @@
     {{isEditMode ? 'Update' : 'Create'}}
   </button>
 </div> 
+</div>

@@ -168,6 +168,24 @@ import { debounceTime } from 'rxjs';
     box-sizing: border-box;
   }
 }
+:host-context(.change-details-section) {
+  .field-container {
+    max-width: 31.25em;  // 500px equivalent
+    margin: 0 auto;
+
+    mat-form-field {
+      .mat-mdc-form-field-wrapper {
+        padding: 0;
+        margin: 0;
+      }
+      
+      .mat-mdc-form-field-infix {
+        padding: 0 !important;
+        min-height: 32px !important;
+      }
+    }
+  }
+}
   `]
 })
 export class DynamicFieldComponent implements OnInit {

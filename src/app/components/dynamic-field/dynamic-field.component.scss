@@ -1,4 +1,11 @@
+.field-label {
+  color: #009bda !important;
+}
 .field-container {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 8px;
+
   &.horizontal {
     display: flex;
     align-items: center;
@@ -8,7 +15,7 @@
       flex: 1;
     }
   }
-
+ 
   &.vertical {
     display: flex;
     flex-direction: column;

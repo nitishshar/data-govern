@@ -1,7 +1,6 @@
 <div class="field-container" [class]="layout">
-  <mat-form-field [appearance]="'outline'">
-    <mat-label>{{field.label}}</mat-label>
-    
+  <mat-label class="field-label">{{field.label}}</mat-label>
+  <mat-form-field [appearance]="'outline'">        
     <ng-container [ngSwitch]="field.type">
       <!-- Text Input -->
       <input *ngSwitchCase="FormFieldType.TEXT"

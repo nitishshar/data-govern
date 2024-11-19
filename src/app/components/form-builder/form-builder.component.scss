@@ -8,15 +8,56 @@ $shadow-color: rgba(0, 0, 0, 0.1);
 :host {
   display: flex;
   justify-content: center;
-  width: 100vw;
-  min-height: 100vh;
+  width: 100%;
+  min-height: 100%;
+  color: #009bda;
   padding: 20px;
   background-color: $background-color;
 }
+.compact-toggle-group {
+  .mat-button-toggle {
+    font-size: 1rem; /* Smaller font size */
+    padding: 4px 4px;   /* Compact padding */
+    min-height: 32px;   /* Smaller height */
+    min-width: 40px;    /* Smaller width */
+    line-height: 24px !important; /* Adjust line height */
+  }
+ ::ng-deep  .mat-button-toggle-label-content{
+    line-height: 24px !important;
+  }
+  .mat-button-toggle-group {
+    gap: 4px; /* Reduce spacing between toggles (optional) */
+  }
+}
+
 
 .stepper-container {
-  width: 80vw;
-  max-width: none;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+  max-height: 80vw;
+  min-width: 70vw;
+  margin-bottom: -4rem;
+}
+.form-builder-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.form-actions {
+  width: 100%;
+  display: flex;
+  justify-content:flex-end;
+  margin-top: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
 }
 
 mat-stepper {
@@ -72,6 +113,48 @@ mat-stepper {
   }
 }
 
+// .mat-stepper-horizontal .mat-horizontal-content-container {
+//   overflow: auto !important;
+//   max-height: 70vh !important;
+// }
+:host ::ng-deep .mat-stepper-horizontal .mat-horizontal-content-container {
+  overflow: auto !important;
+  max-height: 70vh !important;
+}
+
+
+.feed-attributes-form {
+  max-height: 65vh !important;
+  overflow: auto !important;
+}
+.feed-details-form {
+  max-height: 65vh !important;
+  overflow: auto !important;
+}
+.basic-details-form {
+  max-height: 65vh !important;
+  overflow: auto !important;
+}
+
+
+.button-row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;  // Distribute space between buttons
+  align-items: center;             // Center align vertically
+  box-sizing: border-box;
+  background-color: transparent;       // Optional: background color for the actions
+}
+.field-label {
+  color: #009bda !important;
+}
+.button-row button {
+  min-width: 100px;                // Ensure buttons have a minimum width
+  padding: 0.5rem 1rem;
+  background-color: #009bda;
+  color: white;            // Add padding for better click area
+}
 // Expansion Panel Layout
 mat-accordion {
   .mat-expansion-panel {
@@ -178,6 +261,60 @@ mat-accordion {
 :host-context(.edit-mode) {
   .mat-form-field {
     background-color: rgba(0, 0, 0, 0.02);
+  }
+}
+
+// Change Details Section specific styles
+.change-details-section {
+  .fields-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: 100%;
+
+    app-dynamic-field {
+      flex: 1 1 100%;  // Take full width
+      max-width: 31.25em;  // 500px equivalent
+      margin: 0 auto;  // Center the field
+
+      ::ng-deep {
+        .mat-mdc-form-field {
+          .mat-mdc-form-field-wrapper {
+            padding: 0;
+            margin: 0;
+          }
+          
+          .mat-mdc-form-field-infix {
+            padding: 0 !important;
+            min-height: 32px !important;
+          }
+
+          // Remove outline padding
+          .mdc-notched-outline {
+            padding: 0;
+          }
+
+          // Adjust input padding
+          .mat-mdc-input-element {
+            padding: 0 !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Update the expansion panel styles for change details
+mat-accordion {
+  .mat-expansion-panel.change-details {
+    .mat-expansion-panel-body {
+      padding: 0.5rem;
+      
+      .fields-container {
+        max-width: 31.25em;  // 500px equivalent
+        margin: 0 auto;
+      }
+    }
   }
 }
   
