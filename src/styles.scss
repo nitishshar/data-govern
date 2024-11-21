@@ -477,3 +477,32 @@ mat-step-content {
     }
   }
 }
+
+// Add these styles to enhance the 3D effect globally
+.mat-mdc-form-field {
+  transform-style: preserve-3d;
+  
+  .mdc-notched-outline {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border-color: rgba(0, 155, 218, 0.2);
+  }
+
+  &:hover .mdc-notched-outline {
+    border-color: rgba(0, 155, 218, 0.4);
+    box-shadow: 
+      0 3px 6px rgba(0, 0, 0, 0.05),
+      0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+}
+
+// Enhance the container perspective
+.form-builder-container {
+  perspective: 2000px;
+  transform-style: preserve-3d;
+}
+
+// Add smooth transitions
+* {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}

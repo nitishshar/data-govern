@@ -189,7 +189,10 @@
           </ng-container>
 
           <!-- Grid/Card Layouts -->
-          <div class="section-grid" *ngIf="currentLayout() !== FieldLayout.EXPANSION">
+          <div class="section-grid" 
+               [class.layout-grid]="currentLayout() === FieldLayout.GRID"
+               [class.layout-card]="currentLayout() === FieldLayout.CARD"
+               *ngIf="currentLayout() !== FieldLayout.EXPANSION">
             <div class="section-card" *ngFor="let section of feedDetailsConfig">
               <div class="section-header">
                 <mat-icon>{{section.icon || 'article'}}</mat-icon>
