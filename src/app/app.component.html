@@ -1,4 +1,9 @@
 <div class="container">
   <!-- <app-form-builder></app-form-builder> -->
   <app-feed-information-form></app-feed-information-form>
+  <app-commentary
+    [comments]="commentsList"
+    [currentUserId]="loggedInUserId"
+    (commentAdded)="onCommentAdded($event)">
+   </app-commentary>
 </div>
