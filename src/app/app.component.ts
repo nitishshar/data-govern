@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilderComponent } from './components/form-builder/form-builder.component';
 import { FeedInformationFormComponent } from "./components/feed-information-form/feed-information-form.component";
 import { CommentaryComponent } from './components/commentary/commentary.component';
+import { OfficialSigneesComponent } from './components/official-signees/official-signees.component';
 
 interface Comment {
   timestamp: Date;
@@ -16,6 +17,7 @@ interface Comment {
   imports: [
     CommonModule, 
     FormBuilderComponent, 
+    OfficialSigneesComponent,
     FeedInformationFormComponent,
     CommentaryComponent
   ],
